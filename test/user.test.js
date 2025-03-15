@@ -3,16 +3,16 @@ const mongoose = require("../src/db");
 const request = require("supertest");
 require("dotenv").config();
 
-xdescribe("Rutas del usuario", () => {
+describe("Rutas del usuario", () => {
   beforeAll(async () => {
-    await mongoose.connect(process.env.URI, {
+    await mongoose.connect(process.env.URL, {
       useNewUrlParser: true,
     });
   }, 60000);
 
   afterAll(async () => {
     await mongoose.connection.close();
-  }, 60000);
+  }, 60000); 
 
   let user_1, user_2, users;
 

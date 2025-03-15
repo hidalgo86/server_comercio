@@ -4,20 +4,24 @@ const request = require("supertest");
 require("dotenv").config();
 
 describe("Rutas del proveedor", () => {
-  let user_1
+  let user_1;
   beforeAll(async () => {
-    await mongoose.connect(process.env.URI, {
+    await mongoose.connect(process.env.URL, {
       useNewUrlParser: true,
     });
     let user = {
       username: "juan",
       password: 1234,
     };
-    let res = await request(app).post("/api/user/create").send(user); 
+    let res = await request(app).post("/api/user/create").send(user);
     user_1 = res.body.id;
   }, 60000);
 
   afterAll(async () => {
+    // Eliminar el usuario creado para las pruebas
+    await request(app)
+      .delete("/api/user/delete/" + user_1)
+      .send();
     await mongoose.connection.close();
   }, 60000);
 
@@ -25,24 +29,25 @@ describe("Rutas del proveedor", () => {
 
   test("Crear proveedor_1", async () => {
     let data = {
-      razonSocial: "souch",
-      name: "jesus",
+      razonSocial: "Polar",
+      name: "pedro",
       telf: 1234,
-      email: "hidalgo@gmail.com",
-      user: `${user_1}`
+      email: "pedro@gmail.com",
+      user: `${user_1}`,
     };
     let res = await request(app).post("/api/provider/create").send(data);
     provider_1 = res.body.id;
     expect(res.status).toBe(200);
     expect(res.body.name).toBe(data.name);
-  }, 20000);
+  }, 60000);
 
   test("Crear proveedor_2", async () => {
     let data = {
-      razonSocial: "souch",
-      name: "jesus",
+      razonSocial: "Nestle",
+      name: "luis",
       telf: 1234,
-      email: "hidalgo@gmail.com",
+      email: "luis@gmail.com",
+      user: `${user_1}`,
     };
     let res = await request(app).post("/api/provider/create").send(data);
     provider_2 = res.body.id;
@@ -91,4 +96,4 @@ describe("Rutas del proveedor", () => {
     expect(res.status).toBe(200);
     expect(res.body.message).toBe("No hay proveedor");
   });
-});
+}); 

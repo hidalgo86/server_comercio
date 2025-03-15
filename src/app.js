@@ -1,13 +1,13 @@
 "use strict";
-//Configuracion del servidor:
 const express = require("express");
 const app = express();
+const swaggerSetup = require("./swagger");
 
-//Cargamos un middleware para analizar cuerpos a través de la URL y Cualquier partición la convertimos a json:
+// Configuración del servidor
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-//Activamos el CORS para permitir las peticiones AJAX y HTTP desde el frontend:
+// Configuración de CORS
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -19,16 +19,19 @@ app.use((req, res, next) => {
   next();
 });
 
-//Importamos rutas del servidor:
+// Importar rutas del servidor
 const provider_routes = require("./routes/provider");
 const user_routes = require("./routes/user");
 const authorization_routes = require("./routes/authorization");
 const article_routes = require("./routes/product");
 
-//Conectamos las rutas del servidos:
+// Conectar las rutas del servidor
 app.use("/api", authorization_routes);
 app.use("/api", user_routes);
 app.use("/api", provider_routes);
 app.use("/api", article_routes);
+
+// Configurar Swagger
+swaggerSetup(app);
 
 module.exports = app;
