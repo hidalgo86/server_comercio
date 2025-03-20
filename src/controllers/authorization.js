@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 var User = require("../models/user");
 
 function generateAccessToken(usuario) {
-  return jwt.sign(usuario, process.env.SECRET, { expiresIn: "500m" });
+  return jwt.sign(usuario, process.env.SECRET, { expiresIn: "1h" });
 }
 
 var controller = {
@@ -12,7 +12,7 @@ var controller = {
   auth: (req, res) => {
     const { username, password } = req.body;
 
-    var query = User.find({ username: username });
+    var query = User.find({ username });
 
     query
       .then((user) => {
