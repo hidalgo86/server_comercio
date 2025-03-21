@@ -1,43 +1,51 @@
 "use strict";
-require("dotenv").config()
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 var User = require("../models/user");
 
+// Función para generar un token de acceso
 function generateAccessToken(usuario) {
   return jwt.sign(usuario, process.env.SECRET, { expiresIn: "1h" });
 }
 
 var controller = {
-  //Metodo para listar los usuarios:
+  // Método para autenticar usuarios:
   auth: (req, res) => {
     const { username, password } = req.body;
 
+    // Buscar usuario por nombre de usuario
     var query = User.find({ username });
 
     query
       .then((user) => {
         if (!user.length) {
-          return res.send({ error: "Usuario no registrado" });
+          // Código 404: Usuario no encontrado
+          return res.status(404).json({ error: "Usuario no registrado" });
         }
 
+        // Verificar contraseña
         if (user[0].password === password) {
-
           const userForToken = {
             username,
-            password
-          }
+            password,
+          };
 
+          // Generar token de acceso
           const accessToken = generateAccessToken(userForToken);
-          return res.header("authorization", accessToken).json({
+
+          // Código 200: Éxito
+          return res.header("authorization", accessToken).status(200).json({
             token: accessToken,
           });
         } else {
-          return res.send({ error: "password invalida" });
+          // Código 401: Credenciales inválidas
+          return res.status(401).json({ error: "Contraseña inválida" });
         }
       })
       .catch((error) => {
         console.log(error.message);
-        return res.send({ error: error.message });
+        // Código 500: Error interno del servidor
+        return res.status(500).json({ error: error.message });
       });
   },
 };
