@@ -1,9 +1,17 @@
 "use strict";
 
-var express = require("express");
-var router = express.Router();
-var Authorization = require("../controllers/authorization");
+const express = require("express");
+const router = express.Router();
+const Authorization = require("../controllers/authorization");
+const validateToken = require("../middleware/validateToken");
+const validateRole = require("../middleware/validateRole");
 
-router.post("/user/authorization", Authorization.auth);
+//Rutas para la autenticación:
+router.post(
+  "/user/authorization",
+  validateToken,
+  validateRole(["Admin", "Provider", "Client"]), // Todos los roles pueden autenticarse
+  Authorization.auth
+);
 
 module.exports = router;

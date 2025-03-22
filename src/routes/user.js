@@ -1,26 +1,51 @@
-// filepath: c:\Users\USUARIO\Desktop\Server_comercio\src\routes\user.js
 "use strict";
-//Importar el objeto router de express:
 const express = require("express");
 const router = express.Router();
-const validate = require("../middleware/validateToken");
-
-//Importamos el controlador:
-let user = require("../controllers/user");
-
-//Validacion de usuario con un middleware configurado con Json Web Token:
 const validateToken = require("../middleware/validateToken");
+const validateRole = require("../middleware/validateRole");
+const user = require("../controllers/user");
 
-router.get("/user", user.userGet);
+//Rutas para los usuarios:
+router.get(
+  "/user",
+  validateToken,
+  validateRole(["Admin"]), // Solo Admin puede listar todos los usuarios
+  user.userGet
+);
 
-router.get("/user/:id", user.userGetId);
+router.get(
+  "/user/:id",
+  validateToken,
+  validateRole(["Admin", "Provider", "Client"]), // Todos los roles pueden ver un usuario específico
+  user.userGetId
+);
 
-router.put("/user/update/:id", user.userPutId);
+router.put(
+  "/user/update/:id",
+  validateToken,
+  validateRole(["Admin", "Provider"]), // Admin y Provider pueden actualizar usuarios
+  user.userPutId
+);
 
-router.post("/user/create", user.userSave);
+router.post(
+  "/user/create",
+  validateToken,
+  validateRole(["Admin"]), // Solo Admin puede crear usuarios
+  user.userSave
+);
 
-router.delete("/user/delete", validate, user.userDeleteAll);
+router.delete(
+  "/user/delete",
+  validateToken,
+  validateRole(["Admin"]), // Solo Admin puede eliminar todos los usuarios
+  user.userDeleteAll
+);
 
-router.delete("/user/delete/:id", user.userDelete);
+router.delete(
+  "/user/delete/:id",
+  validateToken,
+  validateRole(["Admin"]), // Solo Admin puede eliminar un usuario específico
+  user.userDelete
+);
 
 module.exports = router;
