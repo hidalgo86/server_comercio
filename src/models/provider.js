@@ -3,39 +3,39 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
+// Esquema para la colección de proveedores
 const providerSchema = new Schema({
   razonSocial: {
-    type: String,
-    required: true,
-    // validate: [(username)=>{return username === "Hidalgo"}, "Solo acepta Hidalgo"]
+    type: String, // Cadena de texto
+    required: true, // Obligatorio
   },
   name: {
-    type:String,
-    required: true,
-    // validate: [(username)=>{return username === "Hidalgo"}, "Solo acepta Hidalgo"]
+    type: String, // Cadena de texto
+    required: true, // Obligatorio
   },
   telf: {
-    type:Number,
-    required: true,
-    // validate: [(username)=>{return username === "Hidalgo"}, "Solo acepta Hidalgo"]
+    type: Number, // Número
+    required: true, // Obligatorio
   },
   email: {
-    type:String,
-    required: true,
-    // validate: [(username)=>{return username === "Hidalgo"}, "Solo acepta Hidalgo"]
+    type: String, // Cadena de texto
+    required: true, // Obligatorio
   },
   user: {
-     type: Schema.ObjectId, 
-     required: true,
-     ref: "User" }
+    type: Schema.ObjectId, // Referencia a un documento en otra colección
+    required: true, // Obligatorio
+    ref: "User", // Nombre del modelo referenciado
+  },
 });
 
+// Transformación al convertir a JSON
 providerSchema.set("toJSON", {
   transform: (document, returnedObjetc) => {
-    returnedObjetc.id = returnedObjetc._id
-    delete returnedObjetc._id
-    delete returnedObjetc.__v
-  }
-})
+    returnedObjetc.id = returnedObjetc._id; // Renombrar _id a id
+    delete returnedObjetc._id; // Eliminar _id
+    delete returnedObjetc.__v; // Eliminar __v
+  },
+});
 
+// Exportar el modelo
 module.exports = model("Provider", providerSchema);

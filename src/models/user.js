@@ -3,25 +3,31 @@
 const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
+// Esquema para la colección de usuarios
 const userSchema = new Schema({
   username: {
-    type: String,
-    required: true,
-    // validate: [(username)=>{return username === "Hidalgo"}, "Solo acepta Hidalgo"]
+    type: String, // Cadena de texto
+    required: true, // Obligatorio
   },
   password: {
-    type:Number,
-    required: true,
-    // validate: [(username)=>{return username === "Hidalgo"}, "Solo acepta Hidalgo"]
+    type: String, // Cadena de texto
+    required: true, // Obligatorio
+  },
+  role: {
+    type: String, // Cadena de texto
+    enum: ["Admin", "Provider", "Client"], // Valores permitidos
+    default: "Client", // Valor por defecto
   },
 });
 
+// Transformación al convertir a JSON
 userSchema.set("toJSON", {
   transform: (document, returnedObjetc) => {
-    returnedObjetc.id = returnedObjetc._id
-    delete returnedObjetc._id
-    delete returnedObjetc.__v
-  }
-})
+    returnedObjetc.id = returnedObjetc._id; // Renombrar _id a id
+    delete returnedObjetc._id; // Eliminar _id
+    delete returnedObjetc.__v; // Eliminar __v
+  },
+});
 
+// Exportar el modelo
 module.exports = model("User", userSchema);
