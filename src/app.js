@@ -5,12 +5,7 @@ const helmet = require("helmet");
 const swaggerSetup = require("./swagger");
 const rateLimit = require("express-rate-limit");
 const logRequests = require("./middleware/log");
-
-
 const app = express();
-
-
-
 
 
 // 1. Middlewares de seguridad
@@ -80,6 +75,7 @@ const provider_routes = require("./routes/provider");
 const user_routes = require("./routes/user");
 const authorization_routes = require("./routes/authorization");
 const article_routes = require("./routes/product");
+const validateRole = require("./middleware/validateRole");
 // Usar el middleware
 app.use(logRequests);
 app.use("/api", authorization_routes);
