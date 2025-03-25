@@ -38,7 +38,6 @@ router.put(
 
 router.post(
   "/user/create",
-  validateToken,
   validateRole(["Admin"]), // Solo Admin puede crear usuarios
   [
     check("username")
